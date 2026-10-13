@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero" id="top">
+    <div class="hero-text">
+        <p class="eyebrow">&gt; hello, world</p>
+        <h1>{{ profile.name }}</h1>
+        <p class="tagline">{{ profile.tagline }}</p>
+        <p class="lead">{{ profile.intro }}</p>
+        <div class="actions">
+            <a class="btn" href="#projects">View projects</a>
+            <a class="btn ghost" href="#contact">Contact me</a>
+        </div>
+    </div>
+    <div class="hero-photo">
+        <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile illustration of Adrian">
+    </div>
+</section>
+
+<section id="about">
+    <h2>About</h2>
+    <div class="card">
+        <p>I'm studying <strong>{{ profile.course }}</strong> at <strong>{{ profile.school }}</strong>.</p>
+        <p>I don't have a long list of skills yet, and that's fine. I like to start with an idea,
+           build it step by step, and learn whatever I need along the way.</p>
+    </div>
+</section>
+
+<section id="skills">
+    <h2>Skills</h2>
+    {% if skills %}
+    <ul class="chips">
+        {% for skill in skills %}
+        <li>{{ skill.name }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">No skills added yet.</p>
+    {% endif %}
+</section>
+
+<section id="projects">
+    <h2>Projects</h2>
+    {% if projects %}
+    <div class="grid">
+        {% for project in projects %}
+        <article class="card project">
+            <span class="badge {{ project.get_type()|lower }}">{{ project.get_label() }}</span>
+            <h3>{{ project.title }}</h3>
+            {# POLYMORPHISM: the same call gives a different text for each project type #}
+            <p>{{ project.get_summary() }}</p>
+            {% if project.tech_stack %}
+            <p class="tech">{{ project.tech_stack }}</p>
+            {% endif %}
+            {% if project.link %}
+            <a class="link" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">View project &rarr;</a>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card empty">
+        <p>No projects yet.</p>
+        <a class="btn" href="{{ url_for('new_project') }}">Add your first project</a>
+    </div>
+    {% endif %}
+</section>
+
+<section id="contact">
+    <h2>Contact</h2>
+    <div class="card">
+        <p>Want to talk? Send me an email.</p>
+        <a class="btn" href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if project else 'New' }} project | Adrian Roxas{% endblock %}
+{% block content %}
+
+{# Show what the user just typed if the form failed, otherwise the saved project #}
+{% set v_title = form.get('title', project.title if project else '') %}
+{% set v_type = form.get('type', project.get_type() if project else 'WEB') %}
+{% set v_desc = form.get('description', project.description if project else '') %}
+{% set v_tech = form.get('tech_stack', project.tech_stack if project else '') %}
+{% set v_link = form.get('link', project.link if project else '') %}
+
+<section>
+    <h2>{{ 'Edit project' if project else 'New project' }}</h2>
+    <form class="card form" method="post">
+        <label for="title">Title</label>
+        <input id="title" type="text" name="title" maxlength="80" value="{{ v_title }}" required>
+
+        <label for="type">Type</label>
+        <select id="type" name="type">
+            <option value="WEB" {{ 'selected' if v_type == 'WEB' }}>Web Project</option>
+            <option value="APP" {{ 'selected' if v_type == 'APP' }}>Application</option>
+        </select>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" required>{{ v_desc }}</textarea>
+
+        <label for="tech_stack">Tech stack <span class="muted">(optional, e.g. Java, MySQL)</span></label>
+        <input id="tech_stack" type="text" name="tech_stack" maxlength="100" value="{{ v_tech }}">
+
+        <label for="link">Link <span class="muted">(optional, e.g. your GitHub repo)</span></label>
+        <input id="link" type="url" name="link" maxlength="255" value="{{ v_link }}" placeholder="https://">
+
+        <div class="actions">
+            <button class="btn" type="submit">Save</button>
+            <a class="btn ghost" href="{{ url_for('admin') }}">Cancel</a>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

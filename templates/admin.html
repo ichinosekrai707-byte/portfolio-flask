@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Admin | Adrian Roxas{% endblock %}
+{% block content %}
+
+<section>
+    <h2>Admin</h2>
+    <p class="muted">Add, edit or delete the projects and skills shown on your portfolio.</p>
+</section>
+
+<section>
+    <div class="row-head">
+        <h3>Projects</h3>
+        <a class="btn small" href="{{ url_for('new_project') }}">+ New project</a>
+    </div>
+    {% if projects %}
+    <div class="table">
+        {% for project in projects %}
+        <div class="table-row">
+            <div>
+                <strong>{{ project.title }}</strong>
+                <span class="badge {{ project.get_type()|lower }}">{{ project.get_label() }}</span>
+            </div>
+            <div class="row-actions">
+                <a class="btn ghost small" href="{{ url_for('edit_project', project_id=project.id) }}">Edit</a>
+                <form method="post" action="{{ url_for('delete_project', project_id=project.id) }}"
+                      onsubmit="return confirm('Delete this project?');">
+                    <button class="btn danger small" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No projects yet.</p>
+    {% endif %}
+</section>
+
+<section>
+    <h3>Skills</h3>
+    {% if skills %}
+    <ul class="chips">
+        {% for skill in skills %}
+        <li>
+            {{ skill.name }}
+            <form method="post" action="{{ url_for('delete_skill', skill_id=skill.id) }}">
+                <button class="x" type="submit" aria-label="Delete {{ skill.name }}">&times;</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form class="inline-form" method="post" action="{{ url_for('add_skill') }}">
+        <input type="text" name="name" maxlength="45" placeholder="New skill" required aria-label="New skill name">
+        <button class="btn small" type="submit">Add skill</button>
+    </form>
+</section>
+
+{% endblock %}
